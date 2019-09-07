@@ -1,0 +1,73 @@
+import TP1.*
+
+test "Los detinos mas importantes de barrileteCosmico son Garlics Sea y Last Toninas" {
+    assert.equals(#{garlicSSea, lastToninas} , barrileteCosmico.destinosMasImportantes())
+}
+
+test "Despues de aplicarle un 25% de descuento a Last Toninas el precio es 2625"{
+    lastToninas.aplicarDescuento(25)
+
+    assert.equals(2625, lastToninas.precio())
+}
+
+test "Despues de aplicarle un 25% de descuento a Last Toninas tiene un certificado de descuento en su equipaje"{
+    assert.that(lastToninas.equipaje().contains("Centificado de descuento"))
+}
+
+test "Silver s Sea no es un destino peligroso" {
+    assert.notThat(silverSSea.esPeligroso())
+}
+
+test "Luego de aplicar un descuento de 15% a todos los destinos todos poseen certificado de descuento"{
+    barrileteCosmico.aplicarDescuento(15)
+    assert.that(barrileteCosmico.destinos().all(destino => destino.equipaje().contains("Certificado de descuento")))
+}
+
+test "Con un descuento de 15% aplicado a todos los precios son: garlicSSea = 2125, silverSSea = 1147.5, lastToninas = 2975 y goodAirs = 1275"{
+    barrileteCosmico.aplicarDescuento(15)
+
+    assert.equals(2125, garlicSSea.precio())
+    assert.equals(1147.5, silverSSea.precio())
+    assert.equals(2975, lastToninas.precio())
+    assert.equals(1275, goodAirs.precio())
+}
+
+test "Last Toninas es un destino peligroso"{
+    assert.that(lastToninas.esPeligroso())
+}
+
+test "Barrilete cosmico es una empresa extrema"{
+    assert.that(barrileteCosmico.esExtrema())
+}
+
+/*****************************************************************/
+
+test "elZorro no es poderoso cuando no tiene más de 4 habilidades" {
+	assert.notThat(elZorro.esPoderoso())
+}
+
+test "elZorro es poderoso cuando tiene más de 4 habilidades" {
+  elZorro.aprenderHabilidad("testear")
+  
+  assert.that(elZorro.esPoderoso())
+}
+
+test "la identidadSecreta de superman es Clark Kent" {
+  assert.equals("Clark Kent", superman.identidadSecreta())
+}
+
+test "despues de latinoamericanizar a batman, su nombre es Bruno Díaz" {
+  batman.latinoamericanizar()
+  assert.equals("Bruno Díaz", batman.identidadSecreta())
+}
+
+test "despues de latinoamericanizar a superman, sus celulasSolares disminuyen en 10000" {
+  superman.celulasSolares(40000)
+  superman.latinoamericanizar()
+  assert.equals(30000, superman.celulasSolares())
+}
+
+test "la agrupacionSuperheroica no es amateur cuando más de la mitad son poderosos" {
+  agrupacionSuperheroica.integrantes(#{superman, batman, elZorro})
+  assert.notThat(agrupacionSuperheroica.esAmateur())
+}
