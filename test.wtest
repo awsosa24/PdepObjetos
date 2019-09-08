@@ -1,0 +1,64 @@
+import TP1.*
+
+test "Los detinos mas importantes de barrileteCosmico son Garlics Sea y Last Toninas" {
+    assert.equals(#{garlicSSea, lastToninas} , barrileteCosmico.destinosMasImportantes())
+}
+
+test "Despues de aplicarle un 25% de descuento a Last Toninas el precio es 2625"{
+    lastToninas.aplicarDescuento(25)
+
+    assert.equals(2625, lastToninas.precio())
+}
+
+test "Despues de aplicarle un 25% de descuento a Last Toninas tiene un certificado de descuento en su equipaje"{
+    //assert.that(lastToninas.equipaje().contains("Certificado de descuento"))
+    barrileteCosmico.aplicarDescuento(25)
+    assert.that(lastToninas.equipaje().contains("Certificado de descuento"))
+}
+
+test "Silver s Sea no es un destino peligroso" {
+    assert.notThat(silverSSea.esPeligroso())
+}
+
+test "Luego de aplicar un descuento de 15% a todos los destinos todos poseen certificado de descuento"{
+    barrileteCosmico.aplicarDescuento(15)
+    assert.that(barrileteCosmico.destinos().all({destino => destino.equipaje().contains("Certificado de descuento")}))
+}
+
+test "Con un descuento de 15% aplicado a todos los precios son: garlicSSea = 2125, silverSSea = 1147.5, lastToninas = 2975 y goodAirs = 1275"{
+    barrileteCosmico.aplicarDescuento(15)
+
+    assert.equals(2125, garlicSSea.precio())
+    assert.equals(1147.5, silverSSea.precio())
+    assert.equals(2975, lastToninas.precio())
+    assert.equals(1275, goodAirs.precio())
+}
+
+test "Last Toninas es un destino peligroso"{
+    assert.that(lastToninas.esPeligroso())
+}
+
+test "Barrilete cosmico es una empresa extrema"{
+    assert.that(barrileteCosmico.esExtrema())
+}
+
+test "Los destinos de Barrilete Cosmico son: Last Toninas, Garlic´s sea, Good Airs y Silver's Sea."{
+    assert.equals(#{garlicSSea, silverSSea, lastToninas, goodAirs} , barrileteCosmico.destinos())
+}
+
+test "PHarri tiene millas equivalentes a 500km"{
+	assert.equals(500, pabloHari.kilometros())
+}
+
+test "PHarri vuela a Silver´s Sea (silverSSea) y se agrega el destino a su historial"{
+	assert.that(pabloHari.puedeVolar(silverSSea))
+	pabloHari.volarHacia(silverSSea)
+	assert.that(pabloHari.lugaresConocidos().contains(silverSSea))
+}
+
+test "PHarri vuela a Silver´s Sea (silverSSea) y en su cuenta tiene 150$"{
+	pabloHari.volarHacia(silverSSea)
+	assert.equals(150, pabloHari.saldo())
+}
+
+

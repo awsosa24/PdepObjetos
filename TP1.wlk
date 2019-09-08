@@ -1,8 +1,4 @@
-/* Saqué algunos getters y setters que no se usan nunca (Al final los volvi a poner para los test)
-habia metodos que tenian efecto y también devolvian algo pero lo que hay que hacer
-es que haga una cosa o la otra no las dos, y depues algunos metodos van adentro de los objetos
-por el tema del encapsulamiento de que la logica propia de cada objeto va dentro de ese objeto
-y no de otro (me parece) */
+/* V1.0 TP1 Objetos PdeP */
 
 object garlicSSea {
     var equipaje = #{"Caña de Pescar, Piloto"}
@@ -121,11 +117,11 @@ object goodAirs {
     }
 }
 
-object barrileteCosmico {
+object barrileteCosmico{
     var destinos = #{garlicSSea, silverSSea, lastToninas, goodAirs}
 
     method destinosMasImportantes(){
-        return destinos.filter({destino => destino.esImportante()})
+        return destinos.filter({destino => destino.esImportante() })
     }
 
     method aplicarDescuento(descuento){
@@ -149,12 +145,16 @@ object pabloHari{
     var seguidos = #{}
 
     method volarHacia(destino){
-        if (destino.precio() <= saldo){
+        if (self.puedeVolar(destino)){
             self.agregarDestino(destino)
             saldo -= destino.precio()
         }
     }
 
+	method puedeVolar(unDestino){
+		return unDestino.precio() <= saldo
+	}
+	
     method agregarDestino(destino){
         lugaresConocidos.add(destino)
     }
@@ -166,5 +166,13 @@ object pabloHari{
     method seguirA(unUsuario){
         seguidos.add(unUsuario)
         unUsuario.seguirA(self)
+    }
+    
+    method lugaresConocidos(){
+    	return lugaresConocidos
+    }
+    
+    method saldo(){
+    	return saldo
     }
 }
