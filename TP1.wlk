@@ -176,3 +176,62 @@ object pabloHari{
     	return saldo
     }
 }
+
+/************* TP2 **************/
+
+/* Medios de  transporte */
+
+class Transporte{
+    var tardanza
+    var costo
+}
+
+/* Localidades */
+
+class Localidades{
+    var equipaje
+    var precio
+    var kilometro
+    
+    method equipaje(){
+        return equipaje
+    } 
+    
+    method precio(){
+        return precio
+    }
+
+    method esPeligroso(){
+        return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B")
+    }
+
+    method distanciaA(destino){
+        return /*resta absoluta kilometro - destino.kilometro()  */
+    }
+
+    method kilometro(){
+        return kilometro
+    }
+
+/* Ver en carpeta que hacer cuando comparten mismos metodos pero con diferentes comportamientos */
+    method esImportante(){
+        return precio > 2000
+    }
+
+    method aplicarDescuento(descuento){
+        precio = precio * (1 - descuento / 100)
+    }   
+
+    method agregarEquipaje(unEquipaje){
+        equipaje.add(unEquipaje)
+    }
+}
+
+/* Viajes */
+
+/* Usuarios */
+
+/* Barrilete cosmico */
+
+
+
