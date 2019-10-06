@@ -42,23 +42,23 @@ test "Barrilete cosmico es una empresa extrema"{
     assert.that(barrileteCosmico.esExtrema())
 }
 
-test "Los destinos de Barrilete Cosmico son: Last Toninas, Garlic´s sea, Good Airs y Silver's Sea."{
+test "Los destinos de Barrilete Cosmico son: Last Toninas, Garlic s sea, Good Airs y Silver s Sea."{
     assert.equals(#{garlicSSea, silverSSea, lastToninas, goodAirs} , barrileteCosmico.destinos())
 }
 
-test "PHarri tiene millas equivalentes a 500km"{
+/*test "PHarri tiene millas equivalentes a 500km"{
 	assert.equals(500, pabloHari.kilometros())
-}
+} 
 
-test "PHarri vuela a Silver´s Sea (silverSSea) y se agrega el destino a su historial"{
-	assert.that(pabloHari.puedeVolar(silverSSea))
-	pabloHari.volarHacia(silverSSea)
+test "PHarri viaja a Silver´s Sea (silverSSea) y se agrega el destino a su historial"{
+	assert.that(pabloHari.puedeViajar(silverSSea))
+	pabloHari.viajarHacia(silverSSea)
 	assert.that(pabloHari.lugaresConocidos().contains(silverSSea))
 }
 
 test "PHarri vuela a Silver´s Sea (silverSSea) y en su cuenta tiene 150$"{
-	pabloHari.volarHacia(silverSSea)
+	pabloHari.viajarHacia(silverSSea)
 	assert.equals(150, pabloHari.saldo())
-}
+} */
 
 

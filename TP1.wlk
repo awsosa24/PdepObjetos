@@ -1,3 +1,169 @@
+/************* TP2 **************/
+
+/* Medios de  transporte */
+
+class Transporte{
+    var tardanza
+    var costo
+    
+    method costo(){
+    	return costo
+    }
+}
+
+/* Localidades */
+
+class Localidad{
+    var equipaje
+    var precio
+    var kilometro
+    
+    constructor (precioLocalidad,equipajeLocalidad,unKilometro){
+		precio=precioLocalidad
+		equipaje=equipajeLocalidad
+        kilometro = unKilometro
+	}
+	
+    method equipaje(){
+        return equipaje
+    } 
+    
+    method precio(){
+        return precio
+    }
+	  
+	method kilometro(){
+        return kilometro
+    }
+    
+    method esPeligroso(){
+        return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B")
+    }
+
+
+/* Ver en carpeta que hacer cuando comparten mismos metodos pero con diferentes comportamientos */
+  //Ayuda! no se como hacerlo ya teniendo el objeto y no definiendo una nueva clase
+
+    method esImportante(){
+        return precio > 2000
+    }
+
+    method aplicarDescuento(descuento){
+        precio = precio * (1 - descuento / 100)
+    }   
+
+    method agregarEquipaje(unEquipaje){
+        equipaje.add(unEquipaje)
+    }
+
+/* Viajes */
+	method precioDelViaje(distanciaEntreLocalidades, transporte){
+		return precio + distanciaEntreLocalidades * transporte.costo()
+	}
+}
+    //Me fije en internet en que kilometro quedaba cada lugar xd
+	const garlicSSea  = new  Localidad(2500,#{"Caña de Pescar, Piloto"}, 344)
+	const silverSSea  = new  Localidad(1350,#{"Protector Solar", "Equipo de Buceo"}, 415)
+	const lastToninas = new  Localidad(3500,#{"Vacuna Gripal", "Vacuna B", "Necronomicon"}, 320)
+	const goodAirs    = new  Localidad(1500,#{"Cerveza", "Protector Solar"}, 0)
+
+/* Usuarios */
+class Usuario{
+	const usuario
+    var lugaresConocidos  
+    var saldo 
+    var seguidos 
+    var localidadDeOrigen
+    var kilometros = 0 /*********/
+    
+    constructor(nombreUsuario, lugaresUsuario, saldoUsuario, localidadUsuario){
+    	usuario=nombreUsuario
+    	lugaresConocidos=lugaresUsuario
+    	saldo=saldoUsuario
+    	localidadDeOrigen=localidadUsuario
+    }
+    
+	method localidadDeOrigen(nuevaLocalidad){
+		localidadDeOrigen=nuevaLocalidad
+	}
+
+    method distanciaALocalidad(localidad){ /*********/
+        return  (localidadDeOrigen.kilometro() - localidad.kilometro()).abs()  
+    }
+
+    method viajarHacia(unaLocalidad, unTransporte){
+        if (self.puedeViajar(unaLocalidad, unTransporte)){
+
+            var distanciaEntreLocalidades = self.distanciaALocalidad(unaLocalidad)
+            saldo -= unaLocalidad.precioDelViaje(distanciaEntreLocalidades, unTransporte) /*********/
+
+            self.agregarDestino(unaLocalidad)
+            localidadDeOrigen = unaLocalidad
+            kilometros += distanciaEntreLocalidades /*********/
+            
+        }
+    }
+
+	method puedeViajar(unaLocalidad, unTransporte){
+		return unaLocalidad.precioDelViaje(localidadDeOrigen, unTransporte) <= saldo
+	}
+	
+    method agregarDestino(unaLocalidad){
+        lugaresConocidos.add(unaLocalidad)
+    }
+
+    method seguirA(unUsuario){
+        seguidos.add(unUsuario)
+        unUsuario.seguirA(self)
+    }
+    
+    method lugaresConocidos(){
+    	return lugaresConocidos
+    }
+    
+    method saldo(){
+    	return saldo
+    }
+
+    method kilometros(){
+        return kilometros
+    }
+}
+
+const pabloHari = new Usuario("PHari", #{lastToninas, goodAirs}, 1500, goodAirs)
+
+/* Barrilete cosmico */
+object barrileteCosmico {
+    var destinos = #{garlicSSea, silverSSea, lastToninas, goodAirs}
+    var transportes = #{}
+
+    method destinosMasImportantes(){
+        return destinos.filter({destino => destino.esImportante() })
+    }
+
+    method aplicarDescuento(descuento){
+        destinos.forEach({destino => destino.aplicarDescuento(descuento)})
+        destinos.forEach({destino => destino.agregarEquipaje("Certificado de descuento")})
+    }
+
+    method esExtrema(){
+        return destinos.any({destino => destino.esPeligroso()})
+    }
+
+    method destinos(){
+        return destinos
+    }
+    
+    method armarViaje(unUsuario, unaLocalidad){
+    	unUsuario.volarHacia(unaLocalidad, transportes.anyOne())
+    }
+}
+
+/* En ningun lado dice los kilometros de cada destino
+barrilete cosmico cuando arma un vieje dice que ""establece como localidad de origen la del mismo""
+hay que calcular todos los kilometros acumulados de todos los lugares que conoce?
+*/
+
 /* V1.0 TP1 Objetos PdeP */
 /* 
 object garlicSSea {
@@ -178,168 +344,3 @@ object pabloHari{
     }
 }
 */
-/************* TP2 **************/
-
-/* Medios de  transporte */
-
-class Transporte{
-    var tardanza
-    var costo
-    
-    method costo(){
-    	return costo
-    }
-}
-
-/* Localidades */
-
-class Localidad{
-    var equipaje
-    var precio
-    var kilometro
-    
-    constructor (precioLocalidad,equipajeLocalidad){
-		precio=precioLocalidad
-		equipaje=equipajeLocalidad
-	}
-	
-    method equipaje(){
-        return equipaje
-    } 
-    
-    method precio(){
-        return precio
-    }
-	  
-	method kilometro(){
-        return kilometro
-    }
-    
-    method esPeligroso(){
-        return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B")
-    }
-
-    method distanciaALocalidad(localidad){
-        return  (kilometro - localidad.kilometro()).abs()  
-    }
-
-/* Ver en carpeta que hacer cuando comparten mismos metodos pero con diferentes comportamientos */
-  //Ayuda! no se como hacerlo ya teniendo el objeto y no definiendo una nueva clase
-    method esImportante(){
-        return precio > 2000
-    }
-
-    method aplicarDescuento(descuento){
-        precio = precio * (1 - descuento / 100)
-    }   
-
-    method agregarEquipaje(unEquipaje){
-        equipaje.add(unEquipaje)
-    }
-
-
-/* Viajes */
-	method precioDelViaje(localidad, transporte){
-		return precio+self.distanciaALocalidad(localidad)*transporte.costo()
-	}
-}
-
-	const garlicSSea = new  Localidad(2500,#{"Caña de Pescar, Piloto"})
-	const silverSSea = new  Localidad(1350,#{"Protector Solar", "Equipo de Buceo"})
-	const lastToninas= new  Localidad(3500,#{"Vacuna Gripal", "Vacuna B", "Necronomicon"})
-	const goodAirs 	 = new  Localidad(1500,#{"Cerveza", "Protector Solar"})
-
-/* Usuarios */
-class Usuario{
-	const usuario
-    var lugaresConocidos  
-    var saldo 
-    var seguidos 
-    var localidadDeOrigen
-    
-    constructor(nombreUsuario, lugaresUsuario, saldoUsuario){
-    	usuario=nombreUsuario
-    	lugaresConocidos=lugaresUsuario
-    	saldo=saldoUsuario
-    	//localidadDeOrigen=localidadUsuario
-    }
-    
-
-	method localidadDeOrigen(nuevaLocalidad){
-		localidadDeOrigen=nuevaLocalidad
-	}
-
-    method volarHacia(unaLocalidad, unTransporte){
-        if (self.puedeVolar(unaLocalidad, unTransporte)){
-            self.agregarDestino(unaLocalidad)
-            saldo -= unaLocalidad.precioDelViaje(unaLocalidad, unTransporte)
-            localidadDeOrigen=unaLocalidad
-        }
-    }
-
-	method puedeVolar(unaLocalidad, unTransporte){
-		return unaLocalidad.precioDelViaje(unaLocalidad, unTransporte) <= saldo
-	}
-	
-    method agregarDestino(unaLocalidad){
-        lugaresConocidos.add(unaLocalidad)
-    }
-//TODO 
-//Se suma los kms de cada localidad a la localidad de origen del Usuario.
-//Lo que no me cierra es que la localidad de origen puede cambiar. 
-//Sera que tenemos que tener una variable kilometros e ir sumando los kilometros recorridos ahi?
-    method kilometros(){
-        return (lugaresConocidos.map({
-			        	lugar => lugar.distanciaALocalidad(localidadDeOrigen)
-			        }).sum()) 
-    }
-
-    method seguirA(unUsuario){
-        seguidos.add(unUsuario)
-        unUsuario.seguirA(self)
-    }
-    
-    method lugaresConocidos(){
-    	return lugaresConocidos
-    }
-    
-    method saldo(){
-    	return saldo
-    }
-}
-
-const pabloHari = new Usuario("PHari", #{lastToninas, goodAirs}, 1500)
-
-/* Barrilete cosmico */
-class AgenciaDeViaje {
-    var destinos 
-    var transportes 
-    
-    constructor (destinosIniciales, mediosDeTransporte){
-    	destinos= destinosIniciales
-    	transportes = mediosDeTransporte
-    }
-
-    method destinosMasImportantes(){
-        return destinos.filter({destino => destino.esImportante() })
-    }
-
-    method aplicarDescuento(descuento){
-        destinos.forEach({destino => destino.aplicarDescuento(descuento)})
-        destinos.forEach({destino => destino.agregarEquipaje("Certificado de descuento")})
-    }
-
-    method esExtrema(){
-        return destinos.any({destino => destino.esPeligroso()})
-    }
-
-    method destinos(){
-        return destinos
-    }
-    
-    method armarViaje(unUsuario, unaLocalidad){
-    	unUsuario.volarHacia(unaLocalidad, transportes.anyOne())
-    }
-}
-
-const barrileteCosmico = new AgenciaDeViaje(#{garlicSSea, silverSSea, lastToninas, goodAirs}, #{})
