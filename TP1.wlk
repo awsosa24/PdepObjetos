@@ -6,11 +6,17 @@ class Transporte{
     var tardanza
     var costo
     
+    constructor(tardanzaTransporte, costoTransporte){
+    	tardanza=tardanzaTransporte
+    	costo=costoTransporte
+    }
+    
     method costo(){
     	return costo
     }
 }
 
+	const colectivo = new Transporte(0,10)
 /* Localidades */
 
 class Localidad{
@@ -92,9 +98,10 @@ class Usuario{
     }
 
     method viajarHacia(unaLocalidad, unTransporte){
-        if (self.puedeViajar(unaLocalidad, unTransporte)){
-
-            var distanciaEntreLocalidades = self.distanciaALocalidad(unaLocalidad)
+    	
+        var distanciaEntreLocalidades = self.distanciaALocalidad(unaLocalidad)
+        if (self.puedeViajar(unaLocalidad, unTransporte, distanciaEntreLocalidades)){
+			
             saldo -= unaLocalidad.precioDelViaje(distanciaEntreLocalidades, unTransporte) /*********/
 
             self.agregarDestino(unaLocalidad)
@@ -104,8 +111,8 @@ class Usuario{
         }
     }
 
-	method puedeViajar(unaLocalidad, unTransporte){
-		return unaLocalidad.precioDelViaje(localidadDeOrigen, unTransporte) <= saldo
+	method puedeViajar(unaLocalidad, unTransporte, distanciaEntreLocalidades){
+		return unaLocalidad.precioDelViaje(distanciaEntreLocalidades, unTransporte) <= saldo
 	}
 	
     method agregarDestino(unaLocalidad){
@@ -130,7 +137,7 @@ class Usuario{
     }
 }
 
-const pabloHari = new Usuario("PHari", #{lastToninas, goodAirs}, 1500, goodAirs)
+	const pabloHari = new Usuario("PHari", #{lastToninas, goodAirs}, 1500+4150, goodAirs)
 
 /* Barrilete cosmico */
 object barrileteCosmico {
@@ -169,11 +176,9 @@ hay que calcular todos los kilometros acumulados de todos los lugares que conoce
 object garlicSSea {
     var equipaje = #{"Caña de Pescar, Piloto"}
     var precio = 2500
-
     method esImportante(){
         return precio > 2000
     }
-
     method aplicarDescuento(descuento){
         precio = precio * (1 - descuento / 100)
     }
@@ -185,29 +190,22 @@ object garlicSSea {
     method equipaje(){
         return equipaje
     }
-
     method precio(){
         return precio
     }
-
     method esPeligroso(){
         return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B")
     }
-
 }
-
 object silverSSea {
     var equipaje = #{"Protector Solar", "Equipo de Buceo"}
     var precio = 1350
-
     method esImportante(){
         return precio > 2000
     }
-
     method aplicarDescuento(descuento){
             precio = precio * (1 - descuento / 100)
         }
-
      method agregarEquipaje(unEquipaje){
         equipaje.add(unEquipaje)
     }
@@ -215,16 +213,13 @@ object silverSSea {
     method equipaje(){
         return equipaje
     } 
-
     method precio(){
         return precio
     }
-
     method esPeligroso(){
         return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B")
     }
 }
-
 object lastToninas {
     var equipaje = #{"Vacuna Gripal", "Vacuna B", "Necronomicon"}
     var precio = 3500
@@ -232,15 +227,12 @@ object lastToninas {
     method esImportante(){
         return precio > 2000
     }
-
     method aplicarDescuento(descuento){
         precio = precio * (1 - descuento / 100)
     }   
-
     method agregarEquipaje(unEquipaje){
         equipaje.add(unEquipaje)
     }
-
     method equipaje(){
         return equipaje
     } 
@@ -248,28 +240,22 @@ object lastToninas {
     method precio(){
         return precio
     }
-
     method esPeligroso(){
         return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B")
     }
 }
-
 object goodAirs {
     var equipaje = #{"Cerveza", "Protector Solar"}
     var precio = 1500
-
     method esImportante(){
         return precio > 2000
     }
-
     method aplicarDescuento(descuento){
         precio = precio * (1 - descuento / 100)
     }
-
     method agregarEquipaje(unEquipaje){
         equipaje.add(unEquipaje)
     }
-
     method equipaje(){
         return equipaje
     }
@@ -277,7 +263,6 @@ object goodAirs {
     method precio(){
         return precio
     }
-
     method esPeligroso(){
         return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B")
     }
@@ -286,20 +271,16 @@ object goodAirs {
 
 /*object barrileteCosmico{
     var destinos = #{garlicSSea, silverSSea, lastToninas, goodAirs}
-
     method destinosMasImportantes(){
         return destinos.filter({destino => destino.esImportante() })
     }
-
     method aplicarDescuento(descuento){
         destinos.forEach({destino => destino.aplicarDescuento(descuento)})
         destinos.forEach({destino => destino.agregarEquipaje("Certificado de descuento")})
     }
-
     method esExtrema(){
         return destinos.any({destino => destino.esPeligroso()})
     }
-
     method destinos(){
         return destinos
     }
@@ -310,14 +291,12 @@ object pabloHari{
     var lugaresConocidos = #{lastToninas, goodAirs}
     var saldo = 1500
     var seguidos = #{}
-
     method volarHacia(destino){
         if (self.puedeVolar(destino)){
             self.agregarDestino(destino)
             saldo -= destino.precio()
         }
     }
-
 	method puedeVolar(unDestino){
 		return unDestino.precio() <= saldo
 	}
@@ -325,11 +304,9 @@ object pabloHari{
     method agregarDestino(destino){
         lugaresConocidos.add(destino)
     }
-
     method kilometros(){
         return (lugaresConocidos.map({lugar => lugar.precio()}).sum()) / 10
     }
-
     method seguirA(unUsuario){
         seguidos.add(unUsuario)
         unUsuario.seguirA(self)

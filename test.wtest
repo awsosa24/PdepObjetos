@@ -46,19 +46,19 @@ test "Los destinos de Barrilete Cosmico son: Last Toninas, Garlic s sea, Good Ai
     assert.equals(#{garlicSSea, silverSSea, lastToninas, goodAirs} , barrileteCosmico.destinos())
 }
 
-/*test "PHarri tiene millas equivalentes a 500km"{
-	assert.equals(500, pabloHari.kilometros())
-} 
+test "PHarri al viajar a silverSSea tiene millas equivalentes a 415km"{
+	pabloHari.viajarHacia(silverSSea, colectivo)
+	assert.equals(415, pabloHari.kilometros())
+}  
 
 test "PHarri viaja a Silver´s Sea (silverSSea) y se agrega el destino a su historial"{
-	assert.that(pabloHari.puedeViajar(silverSSea))
-	pabloHari.viajarHacia(silverSSea)
+	assert.that(pabloHari.puedeViajar(silverSSea, colectivo, 415))
+	pabloHari.viajarHacia(silverSSea, colectivo)
 	assert.that(pabloHari.lugaresConocidos().contains(silverSSea))
 }
 
 test "PHarri vuela a Silver´s Sea (silverSSea) y en su cuenta tiene 150$"{
-	pabloHari.viajarHacia(silverSSea)
+	pabloHari.viajarHacia(silverSSea, colectivo)
 	assert.equals(150, pabloHari.saldo())
-} */
-
+} 
 
