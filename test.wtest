@@ -46,19 +46,61 @@ test "Los destinos de Barrilete Cosmico son: Last Toninas, Garlic s sea, Good Ai
     assert.equals(#{garlicSSea, silverSSea, lastToninas, goodAirs} , barrileteCosmico.destinos())
 }
 
+/*******************/
+
 test "PHarri al viajar a silverSSea tiene millas equivalentes a 415km"{
+    const colectivo = new Transporte(0,10)
+
 	pabloHari.viajarHacia(silverSSea, colectivo)
 	assert.equals(415, pabloHari.kilometros())
 }  
 
 test "PHarri viaja a Silver´s Sea (silverSSea) y se agrega el destino a su historial"{
+	const colectivo = new Transporte(0,10)
+
 	assert.that(pabloHari.puedeViajar(silverSSea, colectivo, 415))
 	pabloHari.viajarHacia(silverSSea, colectivo)
 	assert.that(pabloHari.lugaresConocidos().contains(silverSSea))
 }
 
-test "PHarri vuela a Silver´s Sea (silverSSea) y en su cuenta tiene 150$"{
+test "PHarri viaja a Silver´s Sea (silverSSea) y en su cuenta tiene 150$"{
+	const colectivo = new Transporte(0,10)
+
 	pabloHari.viajarHacia(silverSSea, colectivo)
 	assert.equals(150, pabloHari.saldo())
 } 
 
+test "La distancia entre la localidad de origen de pabloHari y silverSSea es 415km"{
+    assert.equals(pabloHari.distanciaALocalidad(silverSSea), 415)
+}
+
+test "Luego de que PHarri viaje en colectivo a silverS Sea, su localidad de origen es silvers Sea"{
+    const colectivo = new Transporte(0,10)
+
+    pabloHari.viajarHacia(silverSSea, colectivo)
+    assert.equals(pabloHari.localidadDeOrigen(), silverSSea)
+}
+
+test "Cuando barrilete cosmico arma un viaje hacia garlicSSea para PHarri, su saldo es 5650"{
+    const colectivo = new Transporte(0,10)
+    barrileteCosmico.agregarTransporte(colectivo)
+
+    barrileteCosmico.armarViaje(pabloHari, garlicSSea)
+    assert.equals(pabloHari.saldo(), 5650)
+}
+
+test "Luego de que barrileteCosmico arme un viaje hacia silverSSea para pHarri, su localidad de origen es silverSSea"{
+    const colectivo = new Transporte(0,10)
+    barrileteCosmico.agregarTransporte(colectivo)
+
+    barrileteCosmico.armarViaje(pabloHari, silverSSea)
+    assert.equals(pabloHari.localidadDeOrigen(), silverSSea)
+}
+
+test "Luego de que barrileteCosmico arme un viaje hacia lastToninas para pHarri, su localidad de origen es goodAirs"{
+    const colectivo = new Transporte(0,10)
+    barrileteCosmico.agregarTransporte(colectivo)
+
+    barrileteCosmico.armarViaje(pabloHari, lastToninas)
+    assert.equals(pabloHari.localidadDeOrigen(), goodAirs)
+}

@@ -16,7 +16,6 @@ class Transporte{
     }
 }
 
-	const colectivo = new Transporte(0,10)
 /* Localidades */
 
 class Localidad{
@@ -46,10 +45,6 @@ class Localidad{
         return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B")
     }
 
-
-/* Ver en carpeta que hacer cuando comparten mismos metodos pero con diferentes comportamientos */
-  //Ayuda! no se como hacerlo ya teniendo el objeto y no definiendo una nueva clase
-
     method esImportante(){
         return precio > 2000
     }
@@ -67,6 +62,7 @@ class Localidad{
 		return precio + distanciaEntreLocalidades * transporte.costo()
 	}
 }
+
     //Me fije en internet en que kilometro quedaba cada lugar xd
 	const garlicSSea  = new  Localidad(2500,#{"Caña de Pescar, Piloto"}, 344)
 	const silverSSea  = new  Localidad(1350,#{"Protector Solar", "Equipo de Buceo"}, 415)
@@ -92,6 +88,10 @@ class Usuario{
 	method localidadDeOrigen(nuevaLocalidad){
 		localidadDeOrigen=nuevaLocalidad
 	}
+
+    method localidadDeOrigen(){
+        return localidadDeOrigen
+    }
 
     method distanciaALocalidad(localidad){ /*********/
         return  (localidadDeOrigen.kilometro() - localidad.kilometro()).abs()  
@@ -162,7 +162,11 @@ object barrileteCosmico {
     }
     
     method armarViaje(unUsuario, unaLocalidad){
-    	unUsuario.volarHacia(unaLocalidad, transportes.anyOne())
+    	unUsuario.viajarHacia(unaLocalidad, transportes.anyOne())
+    }
+
+    method agregarTransporte(unTransporte){
+        transportes.add(unTransporte)
     }
 }
 
