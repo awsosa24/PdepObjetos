@@ -49,25 +49,24 @@ test "Los destinos de Barrilete Cosmico son: Last Toninas, Garlic s sea, Good Ai
 /*******************/
 
 test "PHarri al viajar a silverSSea tiene millas equivalentes a 415km"{
-    const colectivo = new Transporte(0,10)
-
-	pabloHari.viajarHacia(silverSSea, colectivo)
+ const colectivo = new Micro(0,10)
+	var unViaje = new Viaje(pabloHari, silverSSea, colectivo)
+	pabloHari.viajar(unViaje)
 	assert.equals(415, pabloHari.kilometros())
 }  
 
 test "PHarri viaja a Silver´s Sea (silverSSea) y se agrega el destino a su historial"{
-	const colectivo = new Transporte(0,10)
-
-	assert.that(pabloHari.puedeViajar(silverSSea, colectivo, 415))
-	pabloHari.viajarHacia(silverSSea, colectivo)
+	const colectivo = new Micro(0,10)
+	var unViaje = new Viaje(pabloHari, silverSSea, colectivo)
+	pabloHari.viajar(unViaje)
 	assert.that(pabloHari.lugaresConocidos().contains(silverSSea))
 }
 
-test "PHarri viaja a Silver´s Sea (silverSSea) y en su cuenta tiene 150$"{
-	const colectivo = new Transporte(0,10)
-
-	pabloHari.viajarHacia(silverSSea, colectivo)
-	assert.equals(150, pabloHari.saldo())
+test "PHarri viaja a Silver´s Sea (silverSSea) y en su cuenta tiene 4500$"{
+	const colectivo = new Micro(0,10)
+	var unViaje = new Viaje(pabloHari, silverSSea, colectivo)
+	pabloHari.viajar(unViaje)
+	assert.equals(4500, pabloHari.saldo())
 } 
 
 test "La distancia entre la localidad de origen de pabloHari y silverSSea es 415km"{
@@ -75,32 +74,94 @@ test "La distancia entre la localidad de origen de pabloHari y silverSSea es 415
 }
 
 test "Luego de que PHarri viaje en colectivo a silverS Sea, su localidad de origen es silvers Sea"{
-    const colectivo = new Transporte(0,10)
-
-    pabloHari.viajarHacia(silverSSea, colectivo)
+    const colectivo = new Micro(0,10)
+	var unViaje = new Viaje(pabloHari, silverSSea, colectivo)
+	pabloHari.viajar(unViaje)
     assert.equals(pabloHari.localidadDeOrigen(), silverSSea)
 }
 
-test "Cuando barrilete cosmico arma un viaje hacia garlicSSea para PHarri, su saldo es 5650"{
-    const colectivo = new Transporte(0,10)
+test "Cuando barrilete cosmico arma un viaje hacia garlicSSea para PHarri, su saldo es 60"{
+    const colectivo = new Micro(0,10)
     barrileteCosmico.agregarTransporte(colectivo)
-
+	pabloHari.saldo(6000)
     barrileteCosmico.armarViaje(pabloHari, garlicSSea)
-    assert.equals(pabloHari.saldo(), 5650)
+    assert.equals(pabloHari.saldo(), 60)
 }
 
 test "Luego de que barrileteCosmico arme un viaje hacia silverSSea para pHarri, su localidad de origen es silverSSea"{
-    const colectivo = new Transporte(0,10)
+    const colectivo = new Micro(0,10)
     barrileteCosmico.agregarTransporte(colectivo)
-
+	pabloHari.saldo(6000)
     barrileteCosmico.armarViaje(pabloHari, silverSSea)
     assert.equals(pabloHari.localidadDeOrigen(), silverSSea)
 }
 
-test "Luego de que barrileteCosmico arme un viaje hacia lastToninas para pHarri, su localidad de origen es goodAirs"{
-    const colectivo = new Transporte(0,10)
+test "Luego de que barrileteCosmico arme un viaje hacia lastToninas para pHarri, su localidad de origen es lastToninas"{
+    const colectivo = new Micro(0,10)
     barrileteCosmico.agregarTransporte(colectivo)
-
+	pabloHari.saldo(10000)
     barrileteCosmico.armarViaje(pabloHari, lastToninas)
-    assert.equals(pabloHari.localidadDeOrigen(), goodAirs)
+    assert.equals(pabloHari.localidadDeOrigen(), lastToninas)
+}
+///////////////////
+test "Luego de setear las turbinas de un avion en [1,2,1000], su costo deberia ser 10003"{
+	const avion = new Avion(1,[1,2,10000])
+	barrileteCosmico.agregarTransporte(avion)
+	assert.equals(avion.costo(),10003)
+}
+
+test "El costo de un tren deberia ser 2300 *0.62"{
+	const tren = new Tren(2)
+	barrileteCosmico.agregarTransporte(tren)
+	assert.equals(tren.costo(),1426)
+}
+
+test "El costo de un micro se setea en 700 y se verifica"{
+	const micro = new Micro(3,700)
+	barrileteCosmico.agregarTransporte(micro)
+	assert.equals(micro.costo(),700)
+}
+
+test "Luego de setear la probabilidad de choque en 0.5 del barco, su costo deberia ser 500"{
+	const barco = new Barco(4,0.5)
+	barrileteCosmico.agregarTransporte(barco)
+	assert.equals(barco.costo(),500)
+}
+
+test "Luego de setear la tardanza del avion en 1, del tren en 2, del micro en 3 y del barco en 4, 
+	verificar que el metodo de transporte elegido por pabloHari sea el avion"{
+	const avion = new Avion(1,[1,2,10000])
+	barrileteCosmico.agregarTransporte(avion)
+	const tren = new Tren(2)
+	barrileteCosmico.agregarTransporte(tren)
+	const micro = new Micro(3, 700)
+	barrileteCosmico.agregarTransporte(micro)
+	const barco = new Barco(4,0.5)
+	barrileteCosmico.agregarTransporte(barco)
+	pabloHari.perfil(empresarial)
+	assert.equals(pabloHari.elegirTransporte(barrileteCosmico.transportes()),avion)
+}
+
+test "Luego de setear la tardanza del avion en 1, del tren en 2, del micro en 3 y del barco en 4, 
+	y cambiando el perfil de pabloHari a Estudiantil, verificar que el transporte elegido sea el Tren"{
+	const avion = new Avion(1,[1,2,10000])
+	barrileteCosmico.agregarTransporte(avion)
+	const tren = new Tren(2)
+	barrileteCosmico.agregarTransporte(tren)
+	const micro = new Micro(3, 700)
+	barrileteCosmico.agregarTransporte(micro)
+	const barco = new Barco(4,0.5)
+	barrileteCosmico.agregarTransporte(barco)
+	pabloHari.perfil(estudiantil)
+	assert.equals(pabloHari.elegirTransporte(barrileteCosmico.transportes()),tren)
+}
+
+test "Ciudad historica no es peligrosa cuando el pasajero tiene Seguro de asistencia al viajero"{
+	const ciudadHistorica = new CiudadHistorica(2500,#{"Seguro de asistencia al viajero"}, 100, 1)
+	assert.that(ciudadHistorica.esPeligroso())
+}
+
+test "Ciudad historica al tener 3 museos y su costo ser 2500, es importante"{
+	const ciudadHistorica = new CiudadHistorica(2500,#{"Seguro de asistencia al viajero"}, 100, 3)
+	assert.that(ciudadHistorica.esImportante())
 }

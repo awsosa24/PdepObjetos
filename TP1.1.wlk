@@ -2,24 +2,25 @@
 
 class Transporte{
     var tardanza
-    var costo
+    //var tipo =  #{}
+    //var costo
 
-    constructor(tardanzaTransporte, costoTransporte){
+	constructor()
+	
+    constructor(tardanzaTransporte ){
     	tardanza=tardanzaTransporte
-    	costo=costoTransporte
     }
     
-    method costo(){
-    	return costo 
-    }
+    
+    method costo()
 
-    method tardanza(){ 
+    method tardanza(){ /****/
         return tardanza
     }
     
 }
 
-
+/****/
 class Avion inherits Transporte{
 	
     var turbinas
@@ -37,10 +38,22 @@ class Avion inherits Transporte{
 }
 
 class Micro inherits Transporte{
+	var costo
+	constructor(tardanzaTransporte, costoTransporte){
+    	tardanza=tardanzaTransporte
+    	costo=costoTransporte
+    }
+    
+    override method costo(){
+    	return costo
+    }
 
 }
 
 class Tren inherits Transporte{
+    var costo
+    
+    
     override method costo(){
         return 2300 * 0.62 //0.62 para medir el costo en kms
     }
@@ -49,10 +62,10 @@ class Tren inherits Transporte{
 class Barco inherits Transporte{
     var probabilidadDeChocar 
 
-	constructor(tardanzaTransporte, costoTransporte, probabilidadChoque){
+	constructor(tardanzaTransporte, probabilidadChoque){
 		tardanza=tardanzaTransporte
 		probabilidadDeChocar= probabilidadChoque
-		costo=costoTransporte
+	//	costo=costoTransporte
 	}
 	
     override method costo(){
@@ -65,7 +78,8 @@ class Localidad{
     var equipaje
     var precio
     var kilometro
-
+	
+	
     constructor (precioLocalidad,equipajeLocalidad,unKilometro){
 		precio=precioLocalidad
 		equipaje=equipajeLocalidad
@@ -88,7 +102,7 @@ class Localidad{
         return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B")
     }
 
-    method esImportante(){
+    method esImportante(){//equivalente a es Destacado
         return precio > 2000
     }
 
@@ -101,7 +115,7 @@ class Localidad{
     }
 }
 
-
+/****/
 class Playa inherits Localidad{
     override method esPeligroso(){
         return false
@@ -129,11 +143,32 @@ class Montania inherits Localidad{
     override method esPeligroso(){
         return equipaje.contains("Vacuna Gripal") || equipaje.contains("Vacuna B") || altura > 5000
     }
+    
+    override method esImportante(){
+    	return true
+    }
 }
 
 class CiudadHistorica inherits Localidad{
+	var museos
+	
+	constructor (precioLocalidad,equipajeLocalidad,unKilometro, cantidadMuseos){
+		precio=precioLocalidad
+		equipaje=equipajeLocalidad
+        kilometro = unKilometro
+        museos = cantidadMuseos
+	}
+	
+	method museos(){
+		return museos
+	}
+	
     override method esPeligroso(){
         return equipaje.contains("Seguro de asistencia al viajero")
+    }
+    
+    override method esImportante(){
+    	return museos >= 3 && precio > 2000
     }
 }
 
@@ -145,7 +180,7 @@ class Viaje{
 
     constructor(unUsuario, unDestino, unTransporte){
         usuario = unUsuario
-        origen = usuario.localidadDeorigen()
+        origen = usuario.localidadDeOrigen()
         destino = unDestino
         transporte = unTransporte
     }
@@ -167,21 +202,29 @@ class Usuario{
     var lugaresConocidos
     var saldo
     var seguidos
-    var localidadDeorigen
+    var localidadDeOrigen
     var kilometros = 0
-    var perfil 
+    var perfil /****/
 
     constructor(lugaresUsuario, saldoUsuario, localidadUsuario, unPerfil){
     	lugaresConocidos = lugaresUsuario
     	saldo = saldoUsuario
-    	localidadDeorigen = localidadUsuario
+    	localidadDeOrigen = localidadUsuario
     	perfil = unPerfil
     }
 
-    method localidadDeorigen(){
-        return localidadDeorigen
+    method localidadDeOrigen(){
+        return localidadDeOrigen
     }
-
+    
+    method kilometros(){
+    	return kilometros
+    }
+	
+	method distanciaALocalidad(localidad){
+        return  (self.kilometros() - localidad.kilometro()).abs()  
+    }
+    
 	method puedeViajar(precioDeViaje){
 		return precioDeViaje <= saldo 
 	}
@@ -202,12 +245,16 @@ class Usuario{
     method saldo(){
     	return saldo
     }
+    
+    method saldo(nuevoSaldo){
+    	saldo=nuevoSaldo
+    }
 
-    method perfil(nuevoPerfil){ 
+    method perfil(nuevoPerfil){ /****/
         perfil = nuevoPerfil
     }
 
-    method perfil(){ 
+    method perfil(){ /****/
         return perfil
     }
     
@@ -216,15 +263,16 @@ class Usuario{
         if(self.puedeViajar(unViaje.precio())){
             self.agregarDestino(unViaje.destino())
             saldo -= unViaje.precio()
-            localidadDeorigen = unViaje.destino()
+            localidadDeOrigen = unViaje.destino()
             kilometros += unViaje.kilometros()
         }
         else{
+            self.error("Dinero insuficiente para realizar el viaje")
             //error.throwWithMessage("Dinero insuficiente para realizar el viaje")
             //Me tira un error de que no puede resolver la referencia
         }
     }
-
+    
     method elegirTransporte(transportes){
         return perfil.elegirTransporte(saldo, transportes)
     }
@@ -238,7 +286,7 @@ object empresarial{
 
 object estudiantil{
     method elegirTransporte(saldo, transportes){
-        return transportes.filter({transporte => transporte.costo() <= saldo}).max({transporte => transporte.tardanza()})
+        return transportes.filter({transporte => transporte.costo() <= saldo}).min({transporte => transporte.tardanza()})
     }
 }
 
@@ -248,9 +296,10 @@ object familiar{
     }
 }
 
+
 object barrileteCosmico {
     var destinos = #{garlicSSea, silverSSea, lastToninas, goodAirs}
-    var transportes = #{avion, micro, tren, barco}
+    var transportes = #{}
 
 	method transportes(){
 		return transportes
@@ -275,10 +324,9 @@ object barrileteCosmico {
     method armarViaje(unUsuario, unaLocalidad){
         
         var unViaje = new Viaje(unUsuario, unaLocalidad, unUsuario.elegirTransporte(transportes)) 
-        unUsuario.viajar(unViaje)
-        
-    }
-
+        unUsuario.viajar(unViaje) 	
+        }
+    	
     method agregarTransporte(unTransporte){
         transportes.add(unTransporte)
     }
@@ -289,9 +337,4 @@ const silverSSea  = new  Localidad(1350,#{"Protector Solar", "Equipo de Buceo"},
 const lastToninas = new  Localidad(3500,#{"Vacuna Gripal", "Vacuna B", "Necronomicon"}, 320)
 const goodAirs    = new  Localidad(1500,#{"Cerveza", "Protector Solar"}, 0)
 
-const pabloHari = new Usuario(#{lastToninas, goodAirs}, 1500+4150, goodAirs, "Empresarial")
-
-const avion = new Avion(1,[1,2,10000])
-const tren = new Tren(2,80)
-const micro = new Micro(3,700)
-const barco = new Barco(4,20,0.5)
+const pabloHari = new Usuario(#{lastToninas, goodAirs}, 10000, goodAirs, estudiantil)
