@@ -2,27 +2,24 @@
 
 class Transporte{
     var tardanza
-    //var tipo =  #{}
     var costo
 
-	constructor(){	}
-	
     constructor(tardanzaTransporte, costoTransporte){
     	tardanza=tardanzaTransporte
     	costo=costoTransporte
     }
     
     method costo(){
-    	return costo /****/
+    	return costo 
     }
 
-    method tardanza(){ /****/
+    method tardanza(){ 
         return tardanza
     }
     
 }
 
-/****/
+
 class Avion inherits Transporte{
 	
     var turbinas
@@ -69,8 +66,6 @@ class Localidad{
     var precio
     var kilometro
 
-	constructor (){	}
-	
     constructor (precioLocalidad,equipajeLocalidad,unKilometro){
 		precio=precioLocalidad
 		equipaje=equipajeLocalidad
@@ -106,7 +101,7 @@ class Localidad{
     }
 }
 
-/****/
+
 class Playa inherits Localidad{
     override method esPeligroso(){
         return false
@@ -174,7 +169,7 @@ class Usuario{
     var seguidos
     var localidadDeorigen
     var kilometros = 0
-    var perfil /****/
+    var perfil 
 
     constructor(lugaresUsuario, saldoUsuario, localidadUsuario, unPerfil){
     	lugaresConocidos = lugaresUsuario
@@ -208,11 +203,11 @@ class Usuario{
     	return saldo
     }
 
-    method perfil(nuevoPerfil){ /****/
+    method perfil(nuevoPerfil){ 
         perfil = nuevoPerfil
     }
 
-    method perfil(){ /****/
+    method perfil(){ 
         return perfil
     }
     
@@ -229,8 +224,29 @@ class Usuario{
             //Me tira un error de que no puede resolver la referencia
         }
     }
+
+    method elegirTransporte(transportes){
+        return perfil.elegirTransporte(saldo, transportes)
+    }
 }
 
+object empresarial{
+    method elegirTransporte(saldo, transportes){
+        return transportes.min({transporte => transporte.tardanza() })
+    }
+}
+
+object estudiantil{
+    method elegirTransporte(saldo, transportes){
+        return transportes.filter({transporte => transporte.costo() <= saldo}).max({transporte => transporte.tardanza()})
+    }
+}
+
+object familiar{
+    method elegirTransporte(saldo, transportes){
+        return transportes.anyOne()
+    }
+}
 
 object barrileteCosmico {
     var destinos = #{garlicSSea, silverSSea, lastToninas, goodAirs}
@@ -258,38 +274,11 @@ object barrileteCosmico {
     
     method armarViaje(unUsuario, unaLocalidad){
         
-        var unViaje = new Viaje(unUsuario, unaLocalidad, self.elegirTransporte(unUsuario)) /** ACA NOSE COMO TERMINARLO NI SI VA ACA **/
-        unUsuario.viajar(unViaje) /*No me acuerdo si cuando armaba el viaje el usuario viajaba directamente o no */
+        var unViaje = new Viaje(unUsuario, unaLocalidad, unUsuario.elegirTransporte(transportes)) 
+        unUsuario.viajar(unViaje)
+        
     }
-    
-	method elegirTransporte(unUsuario){
-		if(unUsuario.perfil() == "Empresarial"){ //mayor velocidad
-			return self.transporteMasRapido()
-		}	
-		else if(unUsuario.perfil() == "Estudiantil"){
-			return self.transporteMasRapidoYAsequible(unUsuario.saldo())
-		}
-		else{
-			return transportes.anyOne()
-		}
-	}
-	
-	method transportesAsequibles(unSaldo){ //Lista de transportes que el usuario puede pagar
-		return transportes.filter({transporte => transporte.costo() < unSaldo})
-	}
-	
-	method transporteMasRapido(){//el transporte mas rapido
-		return transportes.fold(transportes.anyOne(), {masRapido, unTransporte =>
-				if(unTransporte.tardanza() < masRapido.tardanza()) unTransporte else masRapido})
-	}
-	
-	method transporteMasRapidoYAsequible(unSaldo){
-		return transportes.fold(transportes.anyOne(), 
-			{masRapido, unTransporte =>
-				if(unTransporte.tardanza() < masRapido.tardanza() && unTransporte.costo() < unSaldo) 
-					unTransporte else masRapido})
-	}
-	
+
     method agregarTransporte(unTransporte){
         transportes.add(unTransporte)
     }
